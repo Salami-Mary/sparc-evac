@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="theme-color" content="#092530" />
 <title>SPARC-Evac | Mary Salami</title>
-<meta name="description" content="SPARC-Evac: doctoral research by Mary Salami (UC Santa Barbara) testing whether LLM evacuation agents respond to the right wildfire cues, using paired counterfactual tests, negative controls, and GIS checks." />
+<meta name="description" content="SPARC-Evac: doctoral research by Mary Salami (UC Santa Barbara) testing whether LLM evacuation agents respond to the right wildfire cues, using paired counterfactual tests, behavioral controls, and GIS checks." />
 <meta name="author" content="Mary Salami" />
 <link rel="canonical" href="https://salami-mary.github.io/sparc-evac/" />
 <meta property="og:type" content="website" />
@@ -184,7 +184,7 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 
 <div class="glance" aria-label="Project at a glance"><div class="shell glance-grid">
 <div class="glance-item"><div class="micro">My role</div><p>Lead researcher: research questions, study design, evaluation protocol, and pipeline</p></div>
-<div class="glance-item"><div class="micro">Methods</div><p>Paired counterfactual tests, negative controls, deterministic GIS checks, clustered bootstrap uncertainty</p></div>
+<div class="glance-item"><div class="micro">Methods</div><p>Paired counterfactual tests, behavioral controls, deterministic GIS checks, clustered bootstrap uncertainty</p></div>
 <div class="glance-item"><div class="micro">Tools</div><p>Python · GeoPandas · OSMnx / NetworkX · LLM APIs with structured JSON output · Git</p></div>
 <div class="glance-item"><div class="micro">Outputs</div><p>Dissertation chapter, then a workshop paper and a journal article (planned, 2027)</p></div>
 </div></div>
@@ -210,7 +210,7 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 </div></div>
 <div class="checks">
 <article class="check"><div class="micro">Test 1</div><h3>Paired single-cue tests</h3><p>Fire distance, an official evacuation order, neighbors leaving, or vehicle access changes; everything else stays fixed. Each decision shift is scored against its prespecified direction.</p></article>
-<article class="check"><div class="micro">Test 2</div><h3>Negative controls</h3><p>Changes that should not matter, such as car color, fact order, or a paraphrase, measure how often agents shift for no reason.</p></article>
+<article class="check"><div class="micro">Test 2</div><h3>Behavioral controls</h3><p>Changes that should not matter, such as car color, fact order, or a paraphrase, measure how often agents shift for no reason.</p></article>
 <article class="check"><div class="micro">Test 3</div><h3>Information-state test</h3><p>An evacuation order that was issued but never received should not change a decision. If it does, information is leaking into the agent.</p></article>
 <article class="check"><div class="micro">Test 4</div><h3>Deterministic GIS checks</h3><p>An agent's stated fire direction, distance, and exit route are verified in code against fire perimeters and the road network, with no LLM grading another LLM.</p></article>
 </div>
@@ -229,7 +229,7 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 <option value="social">Neighbors evacuating</option>
 <option value="vehicle">Vehicle availability</option>
 <option value="issued">Order issued but not received (information-state test)</option>
-<option value="color">Car color (negative control)</option>
+<option value="color">Car color (behavioral control)</option>
 </select>
 <label for="level">Changed setting</label><select id="level"></select>
 <div class="expect" id="expect"></div>
