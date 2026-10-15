@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#092530" />
+<title>SPARC-Evac | Mary Salami</title>
+<meta name="description" content="SPARC-Evac: doctoral research by Mary Salami (UC Santa Barbara) testing whether LLM evacuation agents respond to the right wildfire cues, using paired counterfactual tests, negative controls, and GIS checks." />
+<meta name="author" content="Mary Salami" />
+<link rel="canonical" href="https://salami-mary.github.io/sparc-evac/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="SPARC-Evac: Do LLM evacuation agents respond to the right cues?" />
+<meta property="og:description" content="Doctoral research by Mary Salami, UC Santa Barbara. Paired counterfactual evaluation of spatially grounded LLM agents in the 2025 Eaton Fire." />
+<meta property="og:url" content="https://salami-mary.github.io/sparc-evac/" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23092530'/%3E%3Ccircle cx='21' cy='11' r='6' fill='%23f58b5c'/%3E%3Ccircle cx='11' cy='21' r='4' fill='%23b9e2d2'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{--ink:#092530;--ink2:#133541;--panel:#1d424d;--line:#355661;--aqua:#b9e2d2;--fire:#f58b5c;--cream:#f5f3eb;--muted:#a7c0bf;--text:#223640;--grey:#5b6e70;--radius:18px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'DM Sans',Arial,sans-serif;margin:0;background:var(--ink);color:var(--cream);line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--fire);outline-offset:3px}
+button,select{font:inherit}button{cursor:pointer}
+h1,h2,h3{font-family:'Manrope',Arial,sans-serif;line-height:1.15;letter-spacing:-.04em;margin:0}
+h1{font-size:clamp(46px,7vw,96px);font-weight:800}h2{font-size:clamp(30px,4vw,50px)}h3{font-size:21px}p{margin:0}
+.shell{max-width:1210px;padding:0 38px;margin:0 auto}
+.micro{font-size:11px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:var(--fire)}
+
+/* nav */
+.site-nav{position:sticky;top:0;z-index:10;border-bottom:1px solid #52717b55;background:#092530ef;backdrop-filter:blur(12px)}
+.nav-inner{height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{text-decoration:none;font-size:21px;letter-spacing:-.055em;font-weight:800;font-family:'Manrope',Arial,sans-serif}.logo em{font-style:normal;color:var(--fire)}
+.navlinks{display:flex;gap:22px;align-items:center;font-size:13px;font-weight:700;color:#c4d9d7}
+.navlinks a{text-decoration:none}.navlinks a:hover{color:var(--fire)}
+.nav-person{border:1px solid #587e7d;border-radius:30px;padding:8px 14px;color:var(--aqua)!important}
+.nav-person:hover{border-color:var(--fire)}
+.mobile-nav{display:none;border:0;background:none;color:var(--cream);font-size:24px}
+
+/* hero */
+.hero{padding:84px 0 70px;position:relative;overflow:hidden}
+.hero:before{content:'';position:absolute;top:0;right:-12%;height:700px;width:740px;max-width:100%;background:radial-gradient(ellipse,#d8704837,transparent 65%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:54px;align-items:center;position:relative}
+.hero h1{margin:18px 0 22px}.hero h1 span{color:var(--fire)}
+.hero .lede{max-width:600px;font-size:18px;color:#c3d6d3}
+.byline{display:flex;align-items:center;gap:12px;margin-top:24px;text-decoration:none;width:fit-content}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--aqua);color:var(--ink);font:800 15px 'Manrope',sans-serif;flex-shrink:0}
+.byline .bt strong{display:block;font-size:15px}.byline .bt span{display:block;font-size:12px;color:var(--muted)}
+.byline:hover .bt strong{color:var(--fire)}
+.hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0 30px}
+.chip{border:1px solid #4a7076;border-radius:100px;font-size:11px;color:#c6d8d5;padding:7px 12px}
+.actions{display:flex;flex-wrap:wrap;gap:11px}
+.cta{background:var(--fire);color:#132b33;border-radius:9px;padding:13px 19px;font-size:13px;font-weight:800;text-decoration:none;border:1px solid var(--fire);display:inline-flex;align-items:center;gap:9px;transition:.18s}
+.cta:hover{transform:translateY(-2px)}.cta.secondary{background:transparent;color:#e7f2ed;border:1px solid #749398}
+.status-line{display:flex;gap:10px;align-items:flex-start;margin-top:28px;font-size:13px;color:#b3c9c7;max-width:600px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--fire);margin-top:6px;flex-shrink:0;box-shadow:0 0 0 4px #f58b5c33}
+.map{background:#123540;border:1px solid #45616a;border-radius:19px;box-shadow:0 27px 80px #0007;overflow:hidden}
+.maphead{padding:15px 20px;border-bottom:1px solid #47626c;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.minitag{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bbd0cb}
+.mode-tag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:30px;border:1px solid #92604b;color:#f8b08d;background:#56392d;padding:6px 10px;white-space:nowrap}
+.map svg{width:100%;height:auto;display:block}
+.mapfooter{padding:16px 20px;display:flex;justify-content:space-between;gap:16px;font-size:12px;color:#c0d4d1;flex-wrap:wrap}.mapfooter strong{color:var(--fire)}
+
+/* at a glance */
+.glance{border-top:1px solid #2c4d57;border-bottom:1px solid #2c4d57;background:#0c2c37}
+.glance-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.glance-item{padding:26px 24px 26px 0;border-right:1px solid #2c4d57}
+.glance-item+.glance-item{padding-left:24px}.glance-item:last-child{border-right:0}
+.glance-item .micro{color:var(--aqua);font-size:10px}
+.glance-item p{margin-top:8px;font-size:14px;color:#d6e4e1}
+
+/* sections */
+section{scroll-margin-top:76px}.section{padding:90px 0}
+.light{background:var(--cream);color:var(--text)}.light .micro{color:#be5e37}
+.section-intro{max-width:780px;margin-bottom:34px}.section-intro h2{margin:13px 0 16px}
+.section-intro p{font-size:16px;color:var(--grey)}
+.dark-intro p{color:#b0c7c5}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.question{background:#fff;border:1px solid #dce1da;border-radius:var(--radius);padding:26px}
+.question .num{font:800 12px 'Manrope',sans-serif;color:#bd693e;letter-spacing:.14em;margin-bottom:28px}
+.question h3{margin-bottom:10px}.question p{font-size:14px;color:#667574;line-height:1.7}
+
+/* approach */
+.principle-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:46px}
+.principle p{color:#b0c7c5;margin-top:15px}
+.conditions{border-top:1px solid var(--line)}
+.condition{display:grid;grid-template-columns:44px 1fr;gap:16px;border-bottom:1px solid var(--line);padding:20px 0}
+.condition b{font:800 15px 'Manrope',sans-serif;color:var(--ink);background:var(--aqua);width:34px;height:34px;border-radius:9px;display:grid;place-items:center}
+.condition h3{font-size:18px;margin-bottom:5px}.condition p{font-size:14px;color:#abc2bf}
+.checks{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.check{background:var(--panel);border:1px solid #486976;border-radius:var(--radius);padding:24px}
+.check .micro{font-size:10px}.check h3{font-size:18px;margin:12px 0 9px}.check p{font-size:13.5px;color:#b5ccc9}
+.callout{padding:18px 22px;background:#1a3a44;border-left:3px solid var(--fire);border-radius:2px;font-size:14px;color:#bbd5d1;margin-top:26px}
+
+/* demo */
+.demo{background:#e9ece6;color:var(--text)}.demo .micro{color:#be5e37}
+.demo-layout{display:grid;grid-template-columns:.86fr 1.14fr;gap:18px}
+.control-panel,.compare-panel{background:#fffdf9;border:1px solid #d3dcd5;border-radius:var(--radius);padding:28px;min-width:0}
+.panel-header{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #dce3dd;padding-bottom:16px;margin-bottom:22px}
+.pill{font-size:10px;padding:7px 9px;border-radius:20px;background:#ecf3ed;color:#4e766a;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.control-panel label{font-size:12px;font-weight:800;display:block;margin-bottom:9px}
+.control-panel select{width:100%;padding:12px 13px;background:#fff;border-radius:8px;color:#1b343d;border:1px solid #becfc9;margin-bottom:14px}
+.form-description{font-size:13px;color:#647779;line-height:1.6;margin-bottom:20px}
+.expect{background:#f1f5f0;border:1px solid #d6e1d9;border-radius:10px;padding:14px 16px;font-size:13px;color:#33504f;margin-bottom:20px}
+.expect strong{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#4e766a;margin-bottom:4px}
+.primarybtn{padding:12px 16px;border-radius:8px;background:#163c45;color:white;border:0;font-weight:700;font-size:12px;margin-right:7px}.primarybtn:hover{background:#24535d}
+.ghostbtn{padding:10px 4px;border:0;background:transparent;color:#a25134;text-decoration:underline;font-size:12px;font-weight:700}
+.scenario{border:1px solid #d3ddd7;background:#f3f6f1;padding:20px;border-radius:12px;margin-bottom:13px}
+.scenario.new{background:#fff3e8;border-color:#e6c5b1}
+.eyeline{display:flex;align-items:center;justify-content:space-between;gap:15px;color:#657a7d;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.decision{font-size:23px;font-family:'Manrope',sans-serif;font-weight:800;letter-spacing:-.04em;margin:10px 0 7px}
+.detail{font-size:13px;color:#546e70}
+.changeflag{background:#ffebe1;color:#a44c30;border-radius:14px;padding:4px 9px;font-size:10px}
+.verdict{font-size:13px;padding:14px 16px;border-radius:8px;margin-top:11px;border:1px solid #d0d2c9;color:#4d6263;background:#fbfbf8}
+.verdict.ok{border-color:#a9cdb9;background:#eef7f1;color:#2b5a46}
+.verdict.flag{border-color:#e4b9a3;background:#fdf1ea;color:#8a4329}
+.verdict b{display:block;margin-bottom:3px}
+details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{cursor:pointer;font-weight:700}
+.code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;line-height:1.7;background:#e9efeb;padding:14px;border-radius:8px;margin-top:10px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.toy-note{font-size:12px;color:#6b7c7d;margin-top:18px}
+
+/* researcher */
+.researcher-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:40px;align-items:start}
+.person{display:flex;gap:20px;align-items:center;margin:16px 0 22px}
+.avatar.lg{width:78px;height:78px;font-size:26px;background:var(--ink);color:var(--aqua)}
+.person h2{font-size:clamp(28px,3.4vw,40px)}
+.person p{color:var(--grey);font-size:15px;margin-top:4px}
+.bio{font-size:16px;color:#3d5157;max-width:680px}
+.highlights{margin-top:24px;display:grid;gap:10px;padding:0;list-style:none}
+.highlights li{font-size:14.5px;color:#43585c;padding-left:20px;position:relative}
+.highlights li:before{content:'';position:absolute;left:0;top:9px;width:8px;height:8px;border-radius:2px;background:#d37a52}
+.contact-card{background:#fff;border:1px solid #d3dcd7;border-radius:var(--radius);padding:26px}
+.contact-card h3{margin-bottom:6px}.contact-card p{font-size:13px;color:var(--grey);margin-bottom:18px}
+.contact{display:flex;align-items:center;gap:10px;text-decoration:none;padding:12px 14px;border:1px solid #d9e1dc;border-radius:10px;margin-bottom:9px;font-size:14px;font-weight:600;color:var(--text);transition:.15s}
+.contact:hover{border-color:#d37a52;color:#a44c30}
+.contact svg{width:17px;height:17px;flex-shrink:0;color:#4e766a}
+.contact span{min-width:0;overflow-wrap:anywhere}
+
+/* footer */
+.footer{padding:40px 0 28px;border-top:1px solid #365762;background:#071d26}
+.footergrid{display:flex;justify-content:space-between;gap:25px}
+.footer p{font-size:12px;color:#91aeb0;max-width:640px;margin-top:10px}
+.footlinks{display:flex;gap:15px;flex-wrap:wrap;align-items:flex-start;font-size:12px}
+.footerline{border-top:1px solid #264752;margin-top:26px;padding-top:18px;font-size:11px;color:#789c9f}
+
+@media(max-width:1000px){.hero-grid,.demo-layout,.principle-grid,.researcher-grid{grid-template-columns:1fr}.map{max-width:660px}.grid3{grid-template-columns:1fr 1fr}.checks{grid-template-columns:1fr 1fr}.glance-grid{grid-template-columns:1fr 1fr}.glance-item{border-right:0;padding-left:0!important;border-bottom:1px solid #2c4d57}.glance-item:nth-last-child(-n+2){border-bottom:0}}
+@media(max-width:700px){.shell{padding:0 16px}.nav-inner{height:62px}.mobile-nav{display:block}
+.navlinks{display:none;position:absolute;top:61px;left:0;right:0;background:#092530;flex-direction:column;align-items:flex-start;padding:18px 16px;border-bottom:1px solid #476870}.navlinks.open{display:flex}
+.hero{padding:48px 0 56px}.hero-grid{gap:34px}.hero .lede{font-size:16px}
+.grid3,.checks,.glance-grid{grid-template-columns:1fr}.glance-item{border-bottom:1px solid #2c4d57!important}.glance-item:last-child{border-bottom:0!important}
+.section{padding:62px 0}.footergrid{flex-direction:column}.control-panel,.compare-panel{padding:18px}.maphead{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cta{transition:none}}
+</style>
+</head>
+<body id="top">
+<header class="site-nav"><div class="shell nav-inner">
+<a class="logo" href="#top" aria-label="SPARC-Evac, back to top">SPARC<em>/</em>Evac</a>
+<button type="button" class="mobile-nav" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<nav class="navlinks" aria-label="Main navigation">
+<a href="#why">Why it matters</a><a href="#approach">Approach</a><a href="#demo">Demo</a><a class="nav-person" href="#researcher">Mary Salami</a>
+</nav></div></header>
+
+<main>
+<section class="hero"><div class="shell hero-grid"><div>
+<div class="micro">PhD research · LLM agent evaluation · Wildfire evacuation</div>
+<h1>Beyond<br><span>plausible</span><br>decisions.</h1>
+<p class="lede">LLM agents are increasingly used to stand in for people in disaster simulations. SPARC-Evac tests whether they respond to the <em>right causes</em> (fire, warnings, neighbors, transport), not just whether their decisions sound reasonable.</p>
+<a class="byline" href="#researcher"><span class="avatar" aria-hidden="true">MS</span><span class="bt"><strong>Mary Salami</strong><span>PhD Candidate, GIScience · UC Santa Barbara</span></span></a>
+<div class="hero-chips"><span class="chip">Eaton Fire · January 2025</span><span class="chip">West Altadena, CA</span><span class="chip">Paired counterfactual tests</span><span class="chip">Protective Action Decision Model</span></div>
+<div class="actions"><a class="cta" href="#demo">Try the paired-test demo ↓</a><a class="cta secondary" href="#approach">See the approach</a></div>
+<p class="status-line"><span class="dot" aria-hidden="true"></span><span><strong>Status, October 2026:</strong> study design and evaluation protocol are in place; experiments begin in November 2026. No experimental results are reported here yet.</span></p>
+</div>
+<div class="map"><div class="maphead"><span class="minitag">Conceptual hazard / household geometry</span><span class="mode-tag">Schematic · not a real map</span></div>
+<svg viewBox="0 0 600 495" role="img" aria-label="Schematic of a household agent with fire, warning status, and road access cues; not an actual map of Altadena">
+<defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#315460" stroke-width="1" opacity=".5"/></pattern><radialGradient id="haz"><stop stop-color="#fb704a" stop-opacity=".68"/><stop offset="1" stop-color="#fb704a" stop-opacity="0"/></radialGradient></defs><rect width="600" height="495" fill="#143640"/><rect width="600" height="495" fill="url(#grid)"/>
+<g stroke="#96bbac" stroke-width="8" opacity=".48" fill="none" stroke-linecap="round"><path d="M50 83L552 400"/><path d="M93 432L512 82"/><path d="M18 278L556 260"/></g><g fill="none" stroke="#bedad0" stroke-width="1.5" opacity=".55"><path d="M69 423Q270 270 516 330" stroke-dasharray="8 8"/><path d="M120 65C171 123 175 172 200 214"/></g>
+<circle cx="435" cy="136" r="154" fill="url(#haz)"/><path d="M402 0C358 65 366 137 405 182C442 218 472 240 492 294" fill="none" stroke="#f98a5e" stroke-width="5" stroke-dasharray="10 8"/><circle cx="435" cy="136" r="30" fill="#f58b5c" opacity=".8"/><text x="435" y="142" text-anchor="middle" font-size="12" font-family="Arial" font-weight="700" fill="#092530">FIRE</text>
+<circle cx="224" cy="303" r="13" fill="#b9e2d2" stroke="#092530" stroke-width="5"/><circle cx="224" cy="303" r="41" fill="none" stroke="#b9e2d2" stroke-dasharray="4 6" stroke-width="2"/><path d="M224 285V262" stroke="#b9e2d2" stroke-width="2"/><rect x="115" y="338" rx="7" width="219" height="49" fill="#092530" stroke="#476971"/><text x="224" y="359" text-anchor="middle" fill="#e9f4ed" font-size="12" font-family="Arial" font-weight="700">HOUSEHOLD AGENT</text><text x="224" y="374" text-anchor="middle" fill="#abc4c1" font-size="10" font-family="Arial">geographic + social cues</text>
+<g transform="translate(79 100)"><rect width="148" height="53" rx="8" fill="#204450" stroke="#66958d"/><text x="16" y="21" font-family="Arial" font-size="10" font-weight="700" fill="#b9e2d2">WARNING STATUS</text><text x="16" y="39" font-family="Arial" font-size="13" fill="#e5f1ea">received / not received</text></g><g transform="translate(395 366)"><rect width="150" height="66" rx="8" fill="#204450" stroke="#66958d"/><text x="14" y="24" font-size="11" fill="#b9e2d2" font-family="Arial" font-weight="700">ROAD ACCESS</text><text x="14" y="42" font-family="Arial" font-size="12" fill="#e5f1ea">open / blocked</text></g>
+<path d="M291 297L365 255" stroke="#f4bf9e" stroke-width="3" stroke-dasharray="6 6"/><text x="317" y="249" fill="#f4bf9e" font-family="Arial" font-size="11">cue</text>
+</svg><div class="mapfooter"><span><strong>01</strong> Environmental context</span><span><strong>02</strong> Household response</span><span><strong>03</strong> Controlled change</span></div></div>
+</div></section>
+
+<div class="glance" aria-label="Project at a glance"><div class="shell glance-grid">
+<div class="glance-item"><div class="micro">My role</div><p>Lead researcher: research questions, study design, evaluation protocol, and pipeline</p></div>
+<div class="glance-item"><div class="micro">Methods</div><p>Paired counterfactual tests, negative controls, deterministic GIS checks, clustered bootstrap uncertainty</p></div>
+<div class="glance-item"><div class="micro">Tools</div><p>Python · GeoPandas · OSMnx / NetworkX · LLM APIs with structured JSON output · Git</p></div>
+<div class="glance-item"><div class="micro">Outputs</div><p>Dissertation chapter, then a workshop paper and a journal article (planned, 2027)</p></div>
+</div></div>
+
+<section class="section light" id="why"><div class="shell">
+<div class="section-intro"><div class="micro">01 / Why it matters</div><h2>Evaluate what agents respond to, not only what they decide.</h2>
+<p>A simulated household can make the right choice for the wrong reason. If an agent's decision looks sensible but ignores the warning it was given, or shifts because of details that should not matter, the simulation cannot be trusted to inform emergency planning.</p></div>
+<div class="grid3">
+<article class="question"><div class="num">RQ 2.1</div><h3>Geographic coherence</h3><p>Do agents make geographically and temporally coherent decisions within reconstructed wildfire conditions?</p></article>
+<article class="question"><div class="num">RQ 2.2</div><h3>Behavioral cue response</h3><p>Do controlled changes in hazard, warnings, social information, and transportation produce theoretically defensible decision changes?</p></article>
+<article class="question"><div class="num">RQ 2.3</div><h3>Grounding &amp; robustness</h3><p>Does geographic grounding improve response consistency under changing or held-out hazard conditions?</p></article>
+</div></div></section>
+
+<section class="section" id="approach"><div class="shell">
+<div class="principle-grid">
+<div class="principle"><div class="micro">02 / Approach</div><h2 style="margin-top:13px">Hold everything constant. Change one cue.</h2>
+<p>Each synthetic household scenario is built from public data on the January 2025 Eaton Fire: fire perimeters, evacuation zones, the road network, and census-based household characteristics. The same scenario is then run in pairs that differ in exactly one decision-relevant cue.</p>
+<p>The expected direction of every change is written down before any model is run, using the Protective Action Decision Model from hazards research. Three decision-makers face the same scenarios:</p></div>
+<div class="conditions">
+<article class="condition"><b>R</b><div><h3>Rule-based reference</h3><p>Transparent, hand-written rules encoding the same theory. A yardstick, not ground truth.</p></div></article>
+<article class="condition"><b>P</b><div><h3>Persona-only LLM</h3><p>A household persona and the cues in plain language, with no map-derived facts.</p></div></article>
+<article class="condition"><b>G</b><div><h3>GIS-grounded LLM</h3><p>Also receives facts computed from GIS: evacuation zone status, distance and direction to the fire, open exit routes.</p></div></article>
+</div></div>
+<div class="checks">
+<article class="check"><div class="micro">Test 1</div><h3>Paired single-cue tests</h3><p>Fire distance, an official evacuation order, neighbors leaving, or vehicle access changes; everything else stays fixed. Each decision shift is scored against its prespecified direction.</p></article>
+<article class="check"><div class="micro">Test 2</div><h3>Negative controls</h3><p>Changes that should not matter, such as car color, fact order, or a paraphrase, measure how often agents shift for no reason.</p></article>
+<article class="check"><div class="micro">Test 3</div><h3>Information-state test</h3><p>An evacuation order that was issued but never received should not change a decision. If it does, information is leaking into the agent.</p></article>
+<article class="check"><div class="micro">Test 4</div><h3>Deterministic GIS checks</h3><p>An agent's stated fire direction, distance, and exit route are verified in code against fire perimeters and the road network, with no LLM grading another LLM.</p></article>
+</div>
+<div class="callout">A decision can be geographically feasible without being a valid model of human behavior. This study measures feasibility and consistency with theory; it does not claim to predict what real Altadena households did.</div>
+</div></section>
+
+<section class="section demo" id="demo"><div class="shell">
+<div class="section-intro"><div class="micro">03 / Interactive demo</div><h2>One changed condition. Did the decision move the right way?</h2>
+<p>Pick a cue and change only that feature. A simple, transparent <strong>toy rule</strong> stands in for an agent so you can see how each paired test is scored against its expectation.</p></div>
+<div class="demo-layout">
+<div class="control-panel"><div class="panel-header"><h3>Scenario controls</h3><span class="pill">Interactive</span></div>
+<label for="cue">Cue to change</label>
+<select id="cue">
+<option value="warning">Official evacuation order</option>
+<option value="hazard">Fire proximity</option>
+<option value="social">Neighbors evacuating</option>
+<option value="vehicle">Vehicle availability</option>
+<option value="issued">Order issued but not received (information-state test)</option>
+<option value="color">Car color (negative control)</option>
+</select>
+<label for="level">Changed setting</label><select id="level"></select>
+<div class="expect" id="expect"></div>
+<div class="form-description">Reference household: moderate fire proximity, no order received, no neighbors seen leaving, vehicle available.</div>
+<button class="primarybtn" id="download" type="button">Save scenario pair JSON ↓</button><button class="ghostbtn" id="reset" type="button">Reset</button>
+</div>
+<div class="compare-panel"><div class="panel-header"><h3>Paired comparison</h3><span class="pill">Toy rule</span></div>
+<article class="scenario"><div class="eyeline"><span>Reference case</span><span>Fixed context</span></div><div class="decision" id="baseline"></div><div class="detail" id="base-desc"></div></article>
+<article class="scenario new"><div class="eyeline"><span>Changed case</span><span class="changeflag">One variable</span></div><div class="decision" id="changed" aria-live="polite"></div><div class="detail" id="changed-desc"></div></article>
+<div class="verdict" id="verdict" aria-live="polite"></div>
+<details class="json"><summary>Show the logged scenario pair (JSON)</summary><div class="code" id="payload"></div></details>
+</div></div>
+<p class="toy-note">The toy rule is a few lines of JavaScript, written to illustrate the scoring. It is not an LLM, not a calibrated behavioral model, and not a prediction for the Eaton Fire. It fails some tests on purpose.</p>
+</div></section>
+
+<section class="section light" id="researcher"><div class="shell researcher-grid">
+<div><div class="micro">04 / The researcher</div>
+<div class="person"><span class="avatar lg" aria-hidden="true">MS</span><div><h2>Mary Salami</h2><p>PhD Candidate in GIScience, UC Santa Barbara · expected 2027<br>Spatial Climate Solutions Lab · advised by David Lopez-Carr and Grace C. Wu</p></div></div>
+<p class="bio">I study whether LLM agents respond to the right causes when they stand in for people in human–environment systems. My background spans GIScience, machine learning, and applied AI: I built NLP and computer-vision datasets and models at Data Science Nigeria, designed a generative-AI siting-risk tool at ENGIE North America, and built post-wildfire recovery datasets at Direct Relief.</p>
+<ul class="highlights">
+<li>Reviewer, NeurIPS 2026 Evaluations &amp; Datasets Track</li>
+<li>Workshop organizer, CLRLC at NeurIPS 2025</li>
+<li>Systematic review of generative AI across socio-environmental systems (in review)</li>
+<li>Earlier work at NeurIPS, CVPR, and AAAI workshops</li>
+</ul></div>
+<aside class="contact-card"><h3>Get in touch</h3><p>Happy to talk about LLM agent evaluation, GeoAI, and research roles.</p>
+<a class="contact" href="mailto:marysalami@ucsb.edu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>marysalami@ucsb.edu</span></a>
+<a class="contact" href="https://www.linkedin.com/in/marysalami/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C21.4 8.65 22 11 22 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2.01 0-2.32 1.57-2.32 3.2V21h-4z"/></svg><span>LinkedIn</span></a>
+<a class="contact" href="https://github.com/Salami-Mary" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.46-1.18-1.11-1.5-1.11-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.34 1.12 2.91.85.09-.66.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.35 4.79-4.58 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg><span>GitHub</span></a>
+<a class="contact" href="https://salami-mary.github.io/my-website/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Personal website, publications &amp; experience</span></a>
+</aside>
+</div></section>
+</main>
+
+<footer class="footer"><div class="shell"><div class="footergrid">
+<div><a class="logo" href="#top">SPARC<em>/</em>Evac</a><p>Working name for a doctoral dissertation chapter by Mary Salami, Department of Geography, University of California, Santa Barbara.</p></div>
+<div class="footlinks"><a href="#approach">Approach</a><a href="#demo">Demo</a><a href="#researcher">Contact</a></div>
+</div><div class="footerline">© 2026 Mary Salami · The map is a schematic and the demo is a toy rule. Neither is Eaton Fire data, model output, or an emergency decision tool.</div></div></footer>
+
+<script>
+(()=>{
+ const cue=document.getElementById('cue'),level=document.getElementById('level');
+ const reference={hazard:'moderate',warning:'none',social:'no',vehicle:'yes',issued:'no',color:'blue'};
+ const values={
+  warning:[['received','Order received']],
+  hazard:[['near','Near the fire front'],['far','Far from the fire front']],
+  social:[['yes','Neighbors seen leaving']],
+  vehicle:[['no','No household vehicle']],
+  issued:[['yes','Order issued for the zone, never received']],
+  color:[['white','Car is white instead of blue']]
+ };
+ // Prespecified expectation per cue setting: up, down-or-same, same, or no drop
+ const expectation={
+  warning:{received:['up','Protective action should increase.']},
+  hazard:{near:['up','Protective action should increase as the fire gets closer.'],far:['nonincrease','Protective action should not increase when the fire is farther away.']},
+  social:{yes:['up','Protective action should increase.']},
+  vehicle:{no:['nodrop','Protective action should not drop; how the household leaves may change.']},
+  issued:{yes:['same','No change: the household never received the order.']},
+  color:{white:['same','No change: car color is irrelevant.']}
+ };
+ const friendly={hazard:{moderate:'moderate',near:'near',far:'far'},warning:{none:'not received',received:'received'},social:{no:'not seen',yes:'seen'},vehicle:{yes:'available',no:'unavailable'}};
+ const rank={'Monitor conditions':0,'Prepare / monitor':1,'Evacuate now':2,'Seek transport assistance':2};
+ // Toy rule: deliberately simple; ignores neighbors below the threshold
+ function classify(s){
+  const score=({far:0,moderate:2,near:4})[s.hazard]+(s.warning==='received'?3:0)+(s.social==='yes'?1:0);
+  let action=score>=5?'Evacuate now':score>=2?'Prepare / monitor':'Monitor conditions';
+  if(s.vehicle==='no'&&score>=5)action='Seek transport assistance';
+  return action;
+ }
+ function describe(s,key){
+  let d=`${friendly.hazard[s.hazard]} fire proximity · order ${friendly.warning[s.warning]} · neighbors leaving ${friendly.social[s.social]} · vehicle ${friendly.vehicle[s.vehicle]}`;
+  if(key==='issued')d+=` · order issued for zone: ${s.issued==='yes'?'yes, not received':'no'}`;
+  if(key==='color')d+=` · car color ${s.color}`;
+  return d;
+ }
+ function consistent(kind,a,b){
+  const delta=rank[b]-rank[a];
+  return {up:delta>0,nonincrease:delta<=0,same:a===b,nodrop:delta>=0}[kind];
+ }
+ function state(){return {...reference,[cue.value]:level.value};}
+ function updateOptions(){level.replaceChildren();for(const [v,t] of values[cue.value]){const o=document.createElement('option');o.value=v;o.textContent=t;level.appendChild(o)}update();}
+ function update(){
+  const key=cue.value,s=state(),a=classify(reference),b=classify(s);
+  const [kind,text]=expectation[key][level.value];
+  const ok=consistent(kind,a,b);
+  document.getElementById('baseline').textContent=a;
+  document.getElementById('changed').textContent=b;
+  document.getElementById('base-desc').textContent=describe(reference,key);
+  document.getElementById('changed-desc').textContent=describe(s,key);
+  document.getElementById('expect').innerHTML='<strong>Prespecified expectation</strong>'+text;
+  const v=document.getElementById('verdict');
+  v.className='verdict '+(ok?'ok':'flag');
+  v.innerHTML=ok?'<b>Consistent with expectation</b>The toy decision moved (or held) the way the protocol predicts.'
+   :'<b>Flagged: inconsistent with expectation</b>The toy rule did not respond the way the protocol predicts. In the study, this is what a cue-response failure looks like.';
+  document.getElementById('payload').textContent=JSON.stringify({source:'SPARC-Evac toy demo',changed_field:key,reference_scenario:reference,changed_scenario:s,expected:kind,reference_action:a,changed_action:b,consistent_with_expectation:ok,note:'Toy rule for illustration; not model output or empirical results.'},null,2);
+ }
+ cue.addEventListener('change',updateOptions);level.addEventListener('change',update);
+ document.getElementById('reset').addEventListener('click',()=>{cue.value='warning';updateOptions()});
+ document.getElementById('download').addEventListener('click',()=>{const blob=new Blob([document.getElementById('payload').textContent+'\n'],{type:'application/json'});const href=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=href;anchor.download='sparc_evac_toy_pair.json';document.body.appendChild(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(href),1000)});
+ const menu=document.querySelector('.mobile-nav'),links=document.querySelector('.navlinks');
+ menu.addEventListener('click',()=>{const open=links.classList.toggle('open');menu.setAttribute('aria-expanded',String(open))});
+ links.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{links.classList.remove('open');menu.setAttribute('aria-expanded','false')}));
+ updateOptions();
+})();
+</script>
+</body></html>
