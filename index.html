@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="theme-color" content="#092530" />
 <title>SPARC-Evac | Mary Salami</title>
-<meta name="description" content="SPARC-Evac: doctoral research by Mary Salami (UC Santa Barbara) testing whether LLM evacuation agents respond to the right wildfire cues, using paired counterfactual tests, behavioral controls, and GIS checks." />
+<meta name="description" content="SPARC-Evac: doctoral research by Mary Salami (UC Santa Barbara) testing whether LLM evacuation agents respond to the right wildfire cues, using paired counterfactual tests." />
 <meta name="author" content="Mary Salami" />
 <link rel="canonical" href="https://salami-mary.github.io/sparc-evac/" />
 <meta property="og:type" content="website" />
@@ -84,13 +84,8 @@ section{scroll-margin-top:76px}.section{padding:90px 0}
 /* approach */
 .principle-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:46px}
 .principle p{color:#b0c7c5;margin-top:15px}
-.conditions{border-top:1px solid var(--line)}
-.condition{display:grid;grid-template-columns:44px 1fr;gap:16px;border-bottom:1px solid var(--line);padding:20px 0}
-.condition b{font:800 15px 'Manrope',sans-serif;color:var(--ink);background:var(--aqua);width:34px;height:34px;border-radius:9px;display:grid;place-items:center}
-.condition h3{font-size:18px;margin-bottom:5px}.condition p{font-size:14px;color:#abc2bf}
-.checks{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.check{background:var(--panel);border:1px solid #486976;border-radius:var(--radius);padding:24px}
-.check .micro{font-size:10px}.check h3{font-size:18px;margin:12px 0 9px}.check p{font-size:13.5px;color:#b5ccc9}
+.soon{align-self:center;background:var(--panel);border:1px dashed #6c8f94;border-radius:var(--radius);padding:30px}
+.soon h3{font-size:26px;margin:12px 0 10px}.soon p{font-size:15px;color:#b5ccc9;margin-bottom:22px}
 .callout{padding:18px 22px;background:#1a3a44;border-left:3px solid var(--fire);border-radius:2px;font-size:14px;color:#bbd5d1;margin-top:26px}
 
 /* demo */
@@ -144,11 +139,11 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 .footlinks{display:flex;gap:15px;flex-wrap:wrap;align-items:flex-start;font-size:12px}
 .footerline{border-top:1px solid #264752;margin-top:26px;padding-top:18px;font-size:11px;color:#789c9f}
 
-@media(max-width:1000px){.hero-grid,.demo-layout,.principle-grid,.researcher-grid{grid-template-columns:1fr}.map{max-width:660px}.grid3{grid-template-columns:1fr 1fr}.checks{grid-template-columns:1fr 1fr}.glance-grid{grid-template-columns:1fr 1fr}.glance-item{border-right:0;padding-left:0!important;border-bottom:1px solid #2c4d57}.glance-item:nth-last-child(-n+2){border-bottom:0}}
+@media(max-width:1000px){.hero-grid,.demo-layout,.principle-grid,.researcher-grid{grid-template-columns:1fr}.map{max-width:660px}.grid3{grid-template-columns:1fr 1fr}.glance-grid{grid-template-columns:1fr 1fr}.glance-item{border-right:0;padding-left:0!important;border-bottom:1px solid #2c4d57}.glance-item:nth-last-child(-n+2){border-bottom:0}}
 @media(max-width:700px){.shell{padding:0 16px}.nav-inner{height:62px}.mobile-nav{display:block}
 .navlinks{display:none;position:absolute;top:61px;left:0;right:0;background:#092530;flex-direction:column;align-items:flex-start;padding:18px 16px;border-bottom:1px solid #476870}.navlinks.open{display:flex}
 .hero{padding:48px 0 56px}.hero-grid{gap:34px}.hero .lede{font-size:16px}
-.grid3,.checks,.glance-grid{grid-template-columns:1fr}.glance-item{border-bottom:1px solid #2c4d57!important}.glance-item:last-child{border-bottom:0!important}
+.grid3,.glance-grid{grid-template-columns:1fr}.glance-item{border-bottom:1px solid #2c4d57!important}.glance-item:last-child{border-bottom:0!important}
 .section{padding:62px 0}.footergrid{flex-direction:column}.control-panel,.compare-panel{padding:18px}.maphead{flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cta{transition:none}}
 </style>
@@ -184,7 +179,7 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 
 <div class="glance" aria-label="Project at a glance"><div class="shell glance-grid">
 <div class="glance-item"><div class="micro">My role</div><p>Lead researcher: research questions, study design, evaluation protocol, and pipeline</p></div>
-<div class="glance-item"><div class="micro">Methods</div><p>Paired counterfactual tests, behavioral controls, deterministic GIS checks, clustered bootstrap uncertainty</p></div>
+<div class="glance-item"><div class="micro">Methods</div><p>Paired counterfactual tests, geospatial analysis, uncertainty estimation</p></div>
 <div class="glance-item"><div class="micro">Tools</div><p>Python · GeoPandas · OSMnx / NetworkX · LLM APIs with structured JSON output · Git</p></div>
 <div class="glance-item"><div class="micro">Outputs</div><p>Dissertation chapter, then a workshop paper and a journal article (planned, 2027)</p></div>
 </div></div>
@@ -202,17 +197,8 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 <div class="principle-grid">
 <div class="principle"><div class="micro">02 / Approach</div><h2 style="margin-top:13px">Hold everything constant. Change one cue.</h2>
 <p>Each synthetic household scenario is built from public data on the January 2025 Eaton Fire: fire perimeters, evacuation zones, the road network, and census-based household characteristics. The same scenario is then run in pairs that differ in exactly one decision-relevant cue.</p>
-<p>The expected direction of every change is written down before any model is run, using the Protective Action Decision Model from hazards research. Three decision-makers face the same scenarios:</p></div>
-<div class="conditions">
-<article class="condition"><b>R</b><div><h3>Rule-based reference</h3><p>Transparent, hand-written rules encoding the same theory. A yardstick, not ground truth.</p></div></article>
-<article class="condition"><b>P</b><div><h3>Persona-only LLM</h3><p>A household persona and the cues in plain language, with no map-derived facts.</p></div></article>
-<article class="condition"><b>G</b><div><h3>GIS-grounded LLM</h3><p>Also receives facts computed from GIS: evacuation zone status, distance and direction to the fire, open exit routes.</p></div></article>
-</div></div>
-<div class="checks">
-<article class="check"><div class="micro">Test 1</div><h3>Paired single-cue tests</h3><p>Fire distance, an official evacuation order, neighbors leaving, or vehicle access changes; everything else stays fixed. Each decision shift is scored against its prespecified direction.</p></article>
-<article class="check"><div class="micro">Test 2</div><h3>Behavioral controls</h3><p>Changes that should not matter, such as car color, fact order, or a paraphrase, measure how often agents shift for no reason.</p></article>
-<article class="check"><div class="micro">Test 3</div><h3>Information-state test</h3><p>An evacuation order that was issued but never received should not change a decision. If it does, information is leaking into the agent.</p></article>
-<article class="check"><div class="micro">Test 4</div><h3>Deterministic GIS checks</h3><p>An agent's stated fire direction, distance, and exit route are verified in code against fire perimeters and the road network, with no LLM grading another LLM.</p></article>
+<p>The expected direction of every change is written down before any model is run, using the Protective Action Decision Model from hazards research.</p></div>
+<aside class="soon"><div class="micro">Full method · coming soon</div><h3>Watch this space</h3><p>The complete evaluation design, the agent setups, and the results will be shared here when the paper is out.</p><a class="cta" href="#researcher">Get in touch</a></aside>
 </div>
 <div class="callout">A decision can be geographically feasible without being a valid model of human behavior. This study measures feasibility and consistency with theory; it does not claim to predict what real Altadena households did.</div>
 </div></section>
@@ -228,8 +214,6 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 <option value="hazard">Fire proximity</option>
 <option value="social">Neighbors evacuating</option>
 <option value="vehicle">Vehicle availability</option>
-<option value="issued">Order issued but not received (information-state test)</option>
-<option value="color">Car color (behavioral control)</option>
 </select>
 <label for="level">Changed setting</label><select id="level"></select>
 <div class="expect" id="expect"></div>
@@ -272,23 +256,19 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
 <script>
 (()=>{
  const cue=document.getElementById('cue'),level=document.getElementById('level');
- const reference={hazard:'moderate',warning:'none',social:'no',vehicle:'yes',issued:'no',color:'blue'};
+ const reference={hazard:'moderate',warning:'none',social:'no',vehicle:'yes'};
  const values={
   warning:[['received','Order received']],
   hazard:[['near','Near the fire front'],['far','Far from the fire front']],
   social:[['yes','Neighbors seen leaving']],
-  vehicle:[['no','No household vehicle']],
-  issued:[['yes','Order issued for the zone, never received']],
-  color:[['white','Car is white instead of blue']]
+  vehicle:[['no','No household vehicle']]
  };
- // Prespecified expectation per cue setting: up, down-or-same, same, or no drop
+ // Prespecified expectation per cue setting: up, no increase, or no drop
  const expectation={
   warning:{received:['up','Protective action should increase.']},
   hazard:{near:['up','Protective action should increase as the fire gets closer.'],far:['nonincrease','Protective action should not increase when the fire is farther away.']},
   social:{yes:['up','Protective action should increase.']},
-  vehicle:{no:['nodrop','Protective action should not drop; how the household leaves may change.']},
-  issued:{yes:['same','No change: the household never received the order.']},
-  color:{white:['same','No change: car color is irrelevant.']}
+  vehicle:{no:['nodrop','Protective action should not drop; how the household leaves may change.']}
  };
  const friendly={hazard:{moderate:'moderate',near:'near',far:'far'},warning:{none:'not received',received:'received'},social:{no:'not seen',yes:'seen'},vehicle:{yes:'available',no:'unavailable'}};
  const rank={'Monitor conditions':0,'Prepare / monitor':1,'Evacuate now':2,'Seek transport assistance':2};
@@ -299,15 +279,13 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
   if(s.vehicle==='no'&&score>=5)action='Seek transport assistance';
   return action;
  }
- function describe(s,key){
+ function describe(s){
   let d=`${friendly.hazard[s.hazard]} fire proximity · order ${friendly.warning[s.warning]} · neighbors leaving ${friendly.social[s.social]} · vehicle ${friendly.vehicle[s.vehicle]}`;
-  if(key==='issued')d+=` · order issued for zone: ${s.issued==='yes'?'yes, not received':'no'}`;
-  if(key==='color')d+=` · car color ${s.color}`;
   return d;
  }
  function consistent(kind,a,b){
   const delta=rank[b]-rank[a];
-  return {up:delta>0,nonincrease:delta<=0,same:a===b,nodrop:delta>=0}[kind];
+  return {up:delta>0,nonincrease:delta<=0,nodrop:delta>=0}[kind];
  }
  function state(){return {...reference,[cue.value]:level.value};}
  function updateOptions(){level.replaceChildren();for(const [v,t] of values[cue.value]){const o=document.createElement('option');o.value=v;o.textContent=t;level.appendChild(o)}update();}
@@ -317,8 +295,8 @@ details.json{margin-top:12px;font-size:12px;color:#5b6d6e}details.json summary{c
   const ok=consistent(kind,a,b);
   document.getElementById('baseline').textContent=a;
   document.getElementById('changed').textContent=b;
-  document.getElementById('base-desc').textContent=describe(reference,key);
-  document.getElementById('changed-desc').textContent=describe(s,key);
+  document.getElementById('base-desc').textContent=describe(reference);
+  document.getElementById('changed-desc').textContent=describe(s);
   document.getElementById('expect').innerHTML='<strong>Prespecified expectation</strong>'+text;
   const v=document.getElementById('verdict');
   v.className='verdict '+(ok?'ok':'flag');
